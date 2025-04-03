@@ -1,0 +1,1128 @@
+# Update package list
+sudo apt update
+
+# Install required packages
+sudo apt install whois nslookup dnsutils iputils-ping mtr hping3 nmap tcpdump curl jq masscan tshark fping netdiscover
+
+
+# Install Python 3 and pip (for Python 3)
+sudo apt install python3 python3-pip
+
+# Optionally, install any Python libraries you might need
+# You might want to install requests if you're using it in Python scripts
+pip3 install requests
+
+#!/bin/bash
+
+# Script Name: aaayafuj_hacking_info_of_3.sh
+# Purpose: A complete recon and scanning tool for hacking-related information gathering.
+# Usage: ./aaayafuj_hacking_info_of_3.sh <IP-ADDRESS or DOMAIN or EMAIL>
+
+# Check if an argument is provided
+if [ -z "$1" ]; then
+    echo "Usage: $0 <IP-ADDRESS or DOMAIN or EMAIL>"
+    exit 1
+fi
+
+TARGET="$1"
+echo "Starting reconnaissance on: $TARGET"
+echo "--------------------------------------------------"
+
+# 1️⃣ Basic Nmap Scan
+echo "[+] Running Basic Nmap Scan..."
+nmap -Pn "$TARGET"
+
+# 2️⃣ Aggressive Nmap Scan
+echo "[+] Running Aggressive Nmap Scan..."
+nmap -A "$TARGET"
+
+# 3️⃣ Specific Port Scan (Common Ports)
+echo "[+] Running Specific Port Scan (22, 80, 443, 445, 3389)..."
+nmap -p 22,80,443,445,3389 "$TARGET"
+
+# 4️⃣ Full Port Scan (1-65535)
+echo "[+] Running Full Port Scan (1-65535)..."
+nmap -p- "$TARGET"
+
+# 5️⃣ Vulnerability Scan
+echo "[+] Running Nmap Vulnerability Scan..."
+nmap --script vuln "$TARGET"
+
+# 6️⃣ WHOIS Lookup
+echo "[+] Performing WHOIS Lookup..."
+whois "$TARGET"
+
+# 7️⃣ DNS Enumeration
+echo "[+] Running DNS Enumeration..."
+dig ANY "$TARGET"
+host -a "$TARGET"
+nslookup "$TARGET"
+
+# 8️⃣ Reverse IP Lookup (Finding other domains on the same server)
+echo "[+] Running Reverse IP Lookup..."
+curl -s "https://api.hackertarget.com/reverseiplookup/?q=$TARGET"
+
+# 9️⃣ Traceroute & MTR (Network Route Analysis)
+echo "[+] Running Traceroute..."
+traceroute "$TARGET"
+mtr --report "$TARGET"
+
+# 🔟 GeoIP Lookup (Finding location of the target)
+echo "[+] Running GeoIP Lookup..."
+curl -s "https://ipapi.co/$TARGET/json/"
+
+# 1️⃣1️⃣ Google Dorking for OSINT (Requires Manual Check)
+echo "[+] Opening Google OSINT Search..."
+webbrowser="https://www.google.com/search?q=\"$TARGET\""
+xdg-open "$webbrowser" &>/dev/null || open "$webbrowser"
+
+# 1️⃣2️⃣ LinkedIn Lookup (Manual)
+echo "[+] Checking LinkedIn for any profiles related to the target..."
+linkedin_url="https://www.linkedin.com/search/results/people/?keywords=$TARGET"
+xdg-open "$linkedin_url" &>/dev/null || open "$linkedin_url"
+
+# 1️⃣3️⃣ Social Media Username Search (OSINT)
+echo "[+] Searching for Social Media Accounts..."
+social_media_sites=(
+    "https://www.facebook.com/search/top?q=$TARGET"
+    "https://twitter.com/search?q=$TARGET"
+    "https://www.instagram.com/$TARGET"
+    "https://github.com/$TARGET"
+    "https://www.reddit.com/user/$TARGET"
+)
+for site in "${social_media_sites[@]}"; do
+    xdg-open "$site" &>/dev/null || open "$site"
+done
+
+# 1️⃣4️⃣ Subdomain Enumeration
+echo "[+] Running Subdomain Enumeration..."
+curl -s "https://crt.sh/?q=%.$TARGET" | grep -Eo "([a-zA-Z0-9.-]+\.$TARGET)" | sort -u
+
+# 1️⃣5️⃣ Banner Grabbing (Getting service versions)
+echo "[+] Performing Banner Grabbing..."
+echo "GET / HTTP/1.1" | nc "$TARGET" 80
+curl -I "$TARGET"
+
+# 1️⃣6️⃣ Masscan (Ultra-Fast Port Scan)
+echo "[+] Running Masscan (Scanning all ports)..."
+masscan -p1-65535 --rate 10000 "$TARGET"
+
+# 1️⃣7️⃣ Shodan Search (Requires API Key)
+# echo "[+] Checking Shodan (Requires API Key)..."
+# shodan search "ip:$TARGET"
+ echo"aaayafuj is the best tool"
+ echo"aaayafuj for ethical tool"
+ echo"aaayafuj loard of tools YA"
+
+# Check if argument is provided
+if [ -z "$1" ]; then
+    echo "Usage: $0 <IP-ADDRESS or DOMAIN or EMAIL>"
+    exit 1
+fi
+
+TARGET=$1
+
+# 1️⃣ Basic Network Scan
+echo "[+] Running Basic Network Scan..."
+nmap -Pn $TARGET > results/nmap_basic.txt
+
+# 2️⃣ Aggressive Network Scan (Detailed)
+echo "[+] Running Aggressive Scan..."
+nmap -A $TARGET > results/nmap_aggressive.txt
+
+# 3️⃣ Port Scan (Common Ports)
+echo "[+] Scanning Specific Ports (22, 80, 443, 3389)..."
+nmap -p 22,80,443,3389 $TARGET > results/nmap_ports.txt
+
+# 4️⃣ Full Port Scan (All 65535 ports)
+echo "[+] Running Full Port Scan..."
+nmap -p- $TARGET > results/nmap_full_ports.txt
+
+# 5️⃣ Vulnerability Scan
+echo "[+] Running Vulnerability Scan..."
+nmap --script vuln $TARGET > results/nmap_vuln.txt
+
+# 6️⃣ WHOIS Lookup
+echo "[+] Running WHOIS Lookup..."
+whois $TARGET > results/whois.txt
+
+# 7️⃣ DNS Lookup
+echo "[+] Performing DNS Lookup..."
+dig $TARGET ANY > results/dns_info.txt
+
+# 8️⃣ Reverse DNS Lookup
+echo "[+] Performing Reverse DNS Lookup..."
+host $TARGET > results/reverse_dns.txt
+
+# 9️⃣ IP Geolocation
+echo "[+] Fetching Geolocation Data..."
+curl -s "https://ipwhois.app/json/$TARGET" | jq > results/geoip.json
+
+# 🔟 Traceroute for Network Path
+echo "[+] Running Traceroute..."
+traceroute $TARGET > results/traceroute.txt
+
+# 1️⃣1️⃣ Reverse Email Lookup (if target is an email)
+if [[ "$TARGET" == *"@"* ]]; then
+    echo "[+] Performing Reverse Email Lookup..."
+    curl -s "https://emailrep.io/$TARGET" | jq > results/email_lookup.json
+fi
+
+# 1️⃣2️⃣ Searching for Open-Source Intelligence (OSINT)
+echo "[+] Checking Publicly Available Data..."
+curl -s "https://api.hackertarget.com/reversedns/?q=$TARGET" > results/osint.txt
+
+# 1️⃣3️⃣ Checking Security Reports
+echo "[+] Checking Security Trails..."
+curl -s "https://api.securitytrails.com/v1/ip/$TARGET" -H "API_KEY: YOUR_SECURITY_TRAILS_API_KEY" > results/security_trails.json
+
+# 1️⃣4️⃣ Scan for WAF Protection
+echo "[+] Checking for Web Application Firewall (WAF)..."
+wafw00f $TARGET > results/waf_detection.txt
+
+# 1️⃣5️⃣ Full System Fingerprint (Aggressive)
+echo "[+] Running Full System Fingerprinting..."
+nmap -sV -A $TARGET > results/system_fingerprint.txt
+#!/bin/bash
+
+# Check if argument is provided
+if [ -z "$1" ]; then
+    echo "Usage: $0 <IP-ADDRESS or DOMAIN or EMAIL>"
+    exit 1
+fi
+
+TARGET=$1
+# 1️⃣ Basic Network Scan
+echo "[+] Running Basic Network Scan..."
+nmap -Pn $TARGET > results/nmap_basic.txt
+
+# 2️⃣ Aggressive Network Scan (Detailed)
+echo "[+] Running Aggressive Scan..."
+nmap -A $TARGET > results/nmap_aggressive.txt
+
+# 3️⃣ Port Scan (Common Ports)
+echo "[+] Scanning Specific Ports (22, 80, 443, 3389)..."
+nmap -p 22,80,443,3389 $TARGET > results/nmap_ports.txt
+
+# 4️⃣ Full Port Scan (All 65535 ports)
+echo "[+] Running Full Port Scan..."
+nmap -p- $TARGET > results/nmap_full_ports.txt
+
+# 5️⃣ Vulnerability Scan
+echo "[+] Running Vulnerability Scan..."
+nmap --script vuln $TARGET > results/nmap_vuln.txt
+
+# 6️⃣ WHOIS Lookup
+echo "[+] Running WHOIS Lookup..."
+whois $TARGET > results/whois.txt
+
+# 7️⃣ DNS Lookup
+echo "[+] Performing DNS Lookup..."
+dig $TARGET ANY > results/dns_info.txt
+
+# 8️⃣ Reverse DNS Lookup
+echo "[+] Performing Reverse DNS Lookup..."
+host $TARGET > results/reverse_dns.txt
+
+# 9️⃣ IP Geolocation
+echo "[+] Fetching Geolocation Data..."
+curl -s "https://ipwhois.app/json/$TARGET" | jq > results/geoip.json
+
+# 🔟 Traceroute for Network Path
+echo "[+] Running Traceroute..."
+traceroute $TARGET > results/traceroute.txt
+
+# 1️⃣1️⃣ Reverse Email Lookup (if target is an email)
+if [[ "$TARGET" == *"@"* ]]; then
+    echo "[+] Performing Reverse Email Lookup..."
+    curl -s "https://emailrep.io/$TARGET" | jq > results/email_lookup.json
+fi
+
+# 1️⃣2️⃣ Searching for Open-Source Intelligence (OSINT)
+echo "[+] Checking Publicly Available Data..."
+curl -s "https://api.hackertarget.com/reversedns/?q=$TARGET" > results/osint.txt
+
+# 1️⃣3️⃣ Checking Security Reports
+echo "[+] Checking Security Trails..."
+curl -s "https://api.securitytrails.com/v1/ip/$TARGET" -H "API_KEY: YOUR_SECURITY_TRAILS_API_KEY" > results/security_trails.json
+
+# 1️⃣4️⃣ Scan for WAF Protection
+echo "[+] Checking for Web Application Firewall (WAF)..."
+wafw00f $TARGET > results/waf_detection.txt
+
+# 1️⃣5️⃣ Full System Fingerprint (Aggressive)
+echo "[+] Running Full System Fingerprinting..."
+nmap -sV -A $TARGET > results/system_fingerprint.txt
+
+
+# Script Name: aaayafuj_hacking_info_of_3.sh
+# Purpose: A complete recon and scanning tool for hacking-related information gathering.
+# Usage: ./aaayafuj_hacking_info_of_3.sh <IP-ADDRESS or DOMAIN or EMAIL>
+
+# Check if an argument is provided
+if [ -z "$1" ]; then
+    echo "Usage: $0 <IP-ADDRESS or DOMAIN or EMAIL>"
+    exit 1
+fi
+
+TARGET="$1"
+echo "Starting reconnaissance on: $TARGET"
+echo "--------------------------------------------------"
+
+# 1️⃣ Basic Nmap Scan
+echo "[+] Running Basic Nmap Scan..."
+nmap -Pn "$TARGET"
+
+# 2️⃣ Aggressive Nmap Scan
+echo "[+] Running Aggressive Nmap Scan..."
+nmap -A "$TARGET"
+
+# 3️⃣ Specific Port Scan (Common Ports)
+echo "[+] Running Specific Port Scan (22, 80, 443, 445, 3389)..."
+nmap -p 22,80,443,445,3389 "$TARGET"
+
+# 4️⃣ Full Port Scan (1-65535)
+echo "[+] Running Full Port Scan (1-65535)..."
+nmap -p- "$TARGET"
+
+# 5️⃣ Vulnerability Scan
+echo "[+] Running Nmap Vulnerability Scan..."
+nmap --script vuln "$TARGET"
+
+# 6️⃣ WHOIS Lookup
+echo "[+] Performing WHOIS Lookup..."
+whois "$TARGET"
+
+# 7️⃣ DNS Enumeration
+echo "[+] Running DNS Enumeration..."
+dig ANY "$TARGET"
+host -a "$TARGET"
+nslookup "$TARGET"
+
+# 8️⃣ Reverse IP Lookup (Finding other domains on the same server)
+echo "[+] Running Reverse IP Lookup..."
+curl -s "https://api.hackertarget.com/reverseiplookup/?q=$TARGET"
+
+# 9️⃣ Traceroute & MTR (Network Route Analysis)
+echo "[+] Running Traceroute..."
+traceroute "$TARGET"
+mtr --report "$TARGET"
+
+# 🔟 GeoIP Lookup (Finding location of the target)
+echo "[+] Running GeoIP Lookup..."
+curl -s "https://ipapi.co/$TARGET/json/"
+
+# 1️⃣1️⃣ Google Dorking for OSINT (Requires Manual Check)
+echo "[+] Opening Google OSINT Search..."
+webbrowser="https://www.google.com/search?q=\"$TARGET\""
+xdg-open "$webbrowser" &>/dev/null || open "$webbrowser"
+
+# 1️⃣2️⃣ LinkedIn Lookup (Manual)
+echo "[+] Checking LinkedIn for any profiles related to the target..."
+linkedin_url="https://www.linkedin.com/search/results/people/?keywords=$TARGET"
+xdg-open "$linkedin_url" &>/dev/null || open "$linkedin_url"
+
+# 1️⃣3️⃣ Social Media Username Search (OSINT)
+echo "[+] Searching for Social Media Accounts..."
+social_media_sites=(
+    "https://www.facebook.com/search/top?q=$TARGET"
+    "https://twitter.com/search?q=$TARGET"
+    "https://www.instagram.com/$TARGET"
+    "https://github.com/$TARGET"
+    "https://www.reddit.com/user/$TARGET"
+)
+for site in "${social_media_sites[@]}"; do
+    xdg-open "$site" &>/dev/null || open "$site"
+done
+
+# 1️⃣4️⃣ Subdomain Enumeration
+echo "[+] Running Subdomain Enumeration..."
+curl -s "https://crt.sh/?q=%.$TARGET" | grep -Eo "([a-zA-Z0-9.-]+\.$TARGET)" | sort -u
+
+# 1️⃣5️⃣ Banner Grabbing (Getting service versions)
+echo "[+] Performing Banner Grabbing..."
+echo "GET / HTTP/1.1" | nc "$TARGET" 80
+curl -I "$TARGET"
+
+# 1️⃣6️⃣ Masscan (Ultra-Fast Port Scan)
+echo "[+] Running Masscan (Scanning all ports)..."
+masscan -p1-65535 --rate 10000 "$TARGET"
+
+# 1️⃣7️⃣ Shodan Search (Requires API Key)
+# echo "[+] Checking Shodan (Requires API Key)..."
+# shodan search "ip:$TARGET"
+ echo"aaayafuj is the best tool"
+ echo"aaayafuj for ethical tool"
+ echo"aaayafuj loard of tools YA"
+
+# Check if argument is provided
+if [ -z "$1" ]; then
+    echo "Usage: $0 <IP-ADDRESS or DOMAIN or EMAIL>"
+    exit 1
+fi
+
+TARGET=$1
+
+# 1️⃣ Basic Network Scan
+echo "[+] Running Basic Network Scan..."
+nmap -Pn $TARGET > results/nmap_basic.txt
+
+# 2️⃣ Aggressive Network Scan (Detailed)
+echo "[+] Running Aggressive Scan..."
+nmap -A $TARGET > results/nmap_aggressive.txt
+
+# 3️⃣ Port Scan (Common Ports)
+echo "[+] Scanning Specific Ports (22, 80, 443, 3389)..."
+nmap -p 22,80,443,3389 $TARGET > results/nmap_ports.txt
+
+# 4️⃣ Full Port Scan (All 65535 ports)
+echo "[+] Running Full Port Scan..."
+nmap -p- $TARGET > results/nmap_full_ports.txt
+
+# 5️⃣ Vulnerability Scan
+echo "[+] Running Vulnerability Scan..."
+nmap --script vuln $TARGET > results/nmap_vuln.txt
+
+# 6️⃣ WHOIS Lookup
+echo "[+] Running WHOIS Lookup..."
+whois $TARGET > results/whois.txt
+
+# 7️⃣ DNS Lookup
+echo "[+] Performing DNS Lookup..."
+dig $TARGET ANY > results/dns_info.txt
+
+# 8️⃣ Reverse DNS Lookup
+echo "[+] Performing Reverse DNS Lookup..."
+host $TARGET > results/reverse_dns.txt
+
+# 9️⃣ IP Geolocation
+echo "[+] Fetching Geolocation Data..."
+curl -s "https://ipwhois.app/json/$TARGET" | jq > results/geoip.json
+
+# 🔟 Traceroute for Network Path
+echo "[+] Running Traceroute..."
+traceroute $TARGET > results/traceroute.txt
+
+# 1️⃣1️⃣ Reverse Email Lookup (if target is an email)
+if [[ "$TARGET" == *"@"* ]]; then
+    echo "[+] Performing Reverse Email Lookup..."
+    curl -s "https://emailrep.io/$TARGET" | jq > results/email_lookup.json
+fi
+
+# 1️⃣2️⃣ Searching for Open-Source Intelligence (OSINT)
+echo "[+] Checking Publicly Available Data..."
+curl -s "https://api.hackertarget.com/reversedns/?q=$TARGET" > results/osint.txt
+
+# 1️⃣3️⃣ Checking Security Reports
+echo "[+] Checking Security Trails..."
+curl -s "https://api.securitytrails.com/v1/ip/$TARGET" -H "API_KEY: YOUR_SECURITY_TRAILS_API_KEY" > results/security_trails.json
+
+# 1️⃣4️⃣ Scan for WAF Protection
+echo "[+] Checking for Web Application Firewall (WAF)..."
+wafw00f $TARGET > results/waf_detection.txt
+
+# 1️⃣5️⃣ Full System Fingerprint (Aggressive)
+echo "[+] Running Full System Fingerprinting..."
+nmap -sV -A $TARGET > results/system_fingerprint.txt
+#!/bin/bash
+
+# Check if argument is provided
+if [ -z "$1" ]; then
+    echo "Usage: $0 <IP-ADDRESS or DOMAIN or EMAIL>"
+    exit 1
+fi
+
+TARGET=$1
+# 1️⃣ Basic Network Scan
+echo "[+] Running Basic Network Scan..."
+nmap -Pn $TARGET > results/nmap_basic.txt
+
+# 2️⃣ Aggressive Network Scan (Detailed)
+echo "[+] Running Aggressive Scan..."
+nmap -A $TARGET > results/nmap_aggressive.txt
+
+# 3️⃣ Port Scan (Common Ports)
+echo "[+] Scanning Specific Ports (22, 80, 443, 3389)..."
+nmap -p 22,80,443,3389 $TARGET > results/nmap_ports.txt
+
+# 4️⃣ Full Port Scan (All 65535 ports)
+echo "[+] Running Full Port Scan..."
+nmap -p- $TARGET > results/nmap_full_ports.txt
+
+# 5️⃣ Vulnerability Scan
+echo "[+] Running Vulnerability Scan..."
+nmap --script vuln $TARGET > results/nmap_vuln.txt
+
+# 6️⃣ WHOIS Lookup
+echo "[+] Running WHOIS Lookup..."
+whois $TARGET > results/whois.txt
+
+# 7️⃣ DNS Lookup
+echo "[+] Performing DNS Lookup..."
+dig $TARGET ANY > results/dns_info.txt
+
+# 8️⃣ Reverse DNS Lookup
+echo "[+] Performing Reverse DNS Lookup..."
+host $TARGET > results/reverse_dns.txt
+
+# 9️⃣ IP Geolocation
+echo "[+] Fetching Geolocation Data..."
+curl -s "https://ipwhois.app/json/$TARGET" | jq > results/geoip.json
+
+# 🔟 Traceroute for Network Path
+echo "[+] Running Traceroute..."
+traceroute $TARGET > results/traceroute.txt
+
+# 1️⃣1️⃣ Reverse Email Lookup (if target is an email)
+if [[ "$TARGET" == *"@"* ]]; then
+    echo "[+] Performing Reverse Email Lookup..."
+    curl -s "https://emailrep.io/$TARGET" | jq > results/email_lookup.json
+fi
+
+# 1️⃣2️⃣ Searching for Open-Source Intelligence (OSINT)
+echo "[+] Checking Publicly Available Data..."
+curl -s "https://api.hackertarget.com/reversedns/?q=$TARGET" > results/osint.txt
+
+# 1️⃣3️⃣ Checking Security Reports
+echo "[+] Checking Security Trails..."
+curl -s "https://api.securitytrails.com/v1/ip/$TARGET" -H "API_KEY: YOUR_SECURITY_TRAILS_API_KEY" > results/security_trails.json
+
+# 1️⃣4️⃣ Scan for WAF Protection
+echo "[+] Checking for Web Application Firewall (WAF)..."
+wafw00f $TARGET > results/waf_detection.txt
+
+# 1️⃣5️⃣ Full System Fingerprint (Aggressive)
+echo "[+] Running Full System Fingerprinting..."
+nmap -sV -A $TARGET > results/system_fingerprint.txt
+
+# Script Name: aaayafuj_hacking_info_of_3.sh
+# Purpose: A complete recon and scanning tool for hacking-related information gathering.
+# Usage: ./aaayafuj_hacking_info_of_3.sh <IP-ADDRESS or DOMAIN or EMAIL>
+
+# Check if an argument is provided
+if [ -z "$1" ]; then
+    echo "Usage: $0 <IP-ADDRESS or DOMAIN or EMAIL>"
+    exit 1
+fi
+
+TARGET="$1"
+echo "Starting reconnaissance on: $TARGET"
+echo "--------------------------------------------------"
+
+# 1️⃣ Basic Nmap Scan
+echo "[+] Running Basic Nmap Scan..."
+nmap -Pn "$TARGET"
+
+# 2️⃣ Aggressive Nmap Scan
+echo "[+] Running Aggressive Nmap Scan..."
+nmap -A "$TARGET"
+
+# 3️⃣ Specific Port Scan (Common Ports)
+echo "[+] Running Specific Port Scan (22, 80, 443, 445, 3389)..."
+nmap -p 22,80,443,445,3389 "$TARGET"
+
+# 4️⃣ Full Port Scan (1-65535)
+echo "[+] Running Full Port Scan (1-65535)..."
+nmap -p- "$TARGET"
+
+# 5️⃣ Vulnerability Scan
+echo "[+] Running Nmap Vulnerability Scan..."
+nmap --script vuln "$TARGET"
+
+# 6️⃣ WHOIS Lookup
+echo "[+] Performing WHOIS Lookup..."
+whois "$TARGET"
+
+# 7️⃣ DNS Enumeration
+echo "[+] Running DNS Enumeration..."
+dig ANY "$TARGET"
+host -a "$TARGET"
+nslookup "$TARGET"
+
+# 8️⃣ Reverse IP Lookup (Finding other domains on the same server)
+echo "[+] Running Reverse IP Lookup..."
+curl -s "https://api.hackertarget.com/reverseiplookup/?q=$TARGET"
+
+# 9️⃣ Traceroute & MTR (Network Route Analysis)
+echo "[+] Running Traceroute..."
+traceroute "$TARGET"
+mtr --report "$TARGET"
+
+# 🔟 GeoIP Lookup (Finding location of the target)
+echo "[+] Running GeoIP Lookup..."
+curl -s "https://ipapi.co/$TARGET/json/"
+
+# 1️⃣1️⃣ Google Dorking for OSINT (Requires Manual Check)
+echo "[+] Opening Google OSINT Search..."
+webbrowser="https://www.google.com/search?q=\"$TARGET\""
+xdg-open "$webbrowser" &>/dev/null || open "$webbrowser"
+
+# 1️⃣2️⃣ LinkedIn Lookup (Manual)
+echo "[+] Checking LinkedIn for any profiles related to the target..."
+linkedin_url="https://www.linkedin.com/search/results/people/?keywords=$TARGET"
+xdg-open "$linkedin_url" &>/dev/null || open "$linkedin_url"
+
+# 1️⃣3️⃣ Social Media Username Search (OSINT)
+echo "[+] Searching for Social Media Accounts..."
+social_media_sites=(
+    "https://www.facebook.com/search/top?q=$TARGET"
+    "https://twitter.com/search?q=$TARGET"
+    "https://www.instagram.com/$TARGET"
+    "https://github.com/$TARGET"
+    "https://www.reddit.com/user/$TARGET"
+)
+for site in "${social_media_sites[@]}"; do
+    xdg-open "$site" &>/dev/null || open "$site"
+done
+
+# 1️⃣4️⃣ Subdomain Enumeration
+echo "[+] Running Subdomain Enumeration..."
+curl -s "https://crt.sh/?q=%.$TARGET" | grep -Eo "([a-zA-Z0-9.-]+\.$TARGET)" | sort -u
+
+# 1️⃣5️⃣ Banner Grabbing (Getting service versions)
+echo "[+] Performing Banner Grabbing..."
+echo "GET / HTTP/1.1" | nc "$TARGET" 80
+curl -I "$TARGET"
+
+# 1️⃣6️⃣ Masscan (Ultra-Fast Port Scan)
+echo "[+] Running Masscan (Scanning all ports)..."
+masscan -p1-65535 --rate 10000 "$TARGET"
+
+# 1️⃣7️⃣ Shodan Search (Requires API Key)
+# echo "[+] Checking Shodan (Requires API Key)..."
+# shodan search "ip:$TARGET"
+ echo"aaayafuj is the best tool"
+ echo"aaayafuj for ethical tool"
+ echo"aaayafuj loard of tools YA"
+
+# Check if argument is provided
+if [ -z "$1" ]; then
+    echo "Usage: $0 <IP-ADDRESS or DOMAIN or EMAIL>"
+    exit 1
+fi
+
+TARGET=$1
+
+# 1️⃣ Basic Network Scan
+echo "[+] Running Basic Network Scan..."
+nmap -Pn $TARGET > results/nmap_basic.txt
+
+# 2️⃣ Aggressive Network Scan (Detailed)
+echo "[+] Running Aggressive Scan..."
+nmap -A $TARGET > results/nmap_aggressive.txt
+
+# 3️⃣ Port Scan (Common Ports)
+echo "[+] Scanning Specific Ports (22, 80, 443, 3389)..."
+nmap -p 22,80,443,3389 $TARGET > results/nmap_ports.txt
+
+# 4️⃣ Full Port Scan (All 65535 ports)
+echo "[+] Running Full Port Scan..."
+nmap -p- $TARGET > results/nmap_full_ports.txt
+
+# 5️⃣ Vulnerability Scan
+echo "[+] Running Vulnerability Scan..."
+nmap --script vuln $TARGET > results/nmap_vuln.txt
+
+# 6️⃣ WHOIS Lookup
+echo "[+] Running WHOIS Lookup..."
+whois $TARGET > results/whois.txt
+
+# 7️⃣ DNS Lookup
+echo "[+] Performing DNS Lookup..."
+dig $TARGET ANY > results/dns_info.txt
+
+# 8️⃣ Reverse DNS Lookup
+echo "[+] Performing Reverse DNS Lookup..."
+host $TARGET > results/reverse_dns.txt
+
+# 9️⃣ IP Geolocation
+echo "[+] Fetching Geolocation Data..."
+curl -s "https://ipwhois.app/json/$TARGET" | jq > results/geoip.json
+
+# 🔟 Traceroute for Network Path
+echo "[+] Running Traceroute..."
+traceroute $TARGET > results/traceroute.txt
+
+# 1️⃣1️⃣ Reverse Email Lookup (if target is an email)
+if [[ "$TARGET" == *"@"* ]]; then
+    echo "[+] Performing Reverse Email Lookup..."
+    curl -s "https://emailrep.io/$TARGET" | jq > results/email_lookup.json
+fi
+
+# 1️⃣2️⃣ Searching for Open-Source Intelligence (OSINT)
+echo "[+] Checking Publicly Available Data..."
+curl -s "https://api.hackertarget.com/reversedns/?q=$TARGET" > results/osint.txt
+
+# 1️⃣3️⃣ Checking Security Reports
+echo "[+] Checking Security Trails..."
+curl -s "https://api.securitytrails.com/v1/ip/$TARGET" -H "API_KEY: YOUR_SECURITY_TRAILS_API_KEY" > results/security_trails.json
+
+# 1️⃣4️⃣ Scan for WAF Protection
+echo "[+] Checking for Web Application Firewall (WAF)..."
+wafw00f $TARGET > results/waf_detection.txt
+
+# 1️⃣5️⃣ Full System Fingerprint (Aggressive)
+echo "[+] Running Full System Fingerprinting..."
+nmap -sV -A $TARGET > results/system_fingerprint.txt
+#!/bin/bash
+
+# Check if argument is provided
+if [ -z "$1" ]; then
+    echo "Usage: $0 <IP-ADDRESS or DOMAIN or EMAIL>"
+    exit 1
+fi
+
+TARGET=$1
+# 1️⃣ Basic Network Scan
+echo "[+] Running Basic Network Scan..."
+nmap -Pn $TARGET > results/nmap_basic.txt
+
+# 2️⃣ Aggressive Network Scan (Detailed)
+echo "[+] Running Aggressive Scan..."
+nmap -A $TARGET > results/nmap_aggressive.txt
+
+# 3️⃣ Port Scan (Common Ports)
+echo "[+] Scanning Specific Ports (22, 80, 443, 3389)..."
+nmap -p 22,80,443,3389 $TARGET > results/nmap_ports.txt
+
+# 4️⃣ Full Port Scan (All 65535 ports)
+echo "[+] Running Full Port Scan..."
+nmap -p- $TARGET > results/nmap_full_ports.txt
+
+# 5️⃣ Vulnerability Scan
+echo "[+] Running Vulnerability Scan..."
+nmap --script vuln $TARGET > results/nmap_vuln.txt
+
+# 6️⃣ WHOIS Lookup
+echo "[+] Running WHOIS Lookup..."
+whois $TARGET > results/whois.txt
+
+# 7️⃣ DNS Lookup
+echo "[+] Performing DNS Lookup..."
+dig $TARGET ANY > results/dns_info.txt
+
+# 8️⃣ Reverse DNS Lookup
+echo "[+] Performing Reverse DNS Lookup..."
+host $TARGET > results/reverse_dns.txt
+
+# 9️⃣ IP Geolocation
+echo "[+] Fetching Geolocation Data..."
+curl -s "https://ipwhois.app/json/$TARGET" | jq > results/geoip.json
+
+# 🔟 Traceroute for Network Path
+echo "[+] Running Traceroute..."
+traceroute $TARGET > results/traceroute.txt
+
+# 1️⃣1️⃣ Reverse Email Lookup (if target is an email)
+if [[ "$TARGET" == *"@"* ]]; then
+    echo "[+] Performing Reverse Email Lookup..."
+    curl -s "https://emailrep.io/$TARGET" | jq > results/email_lookup.json
+fi
+
+# 1️⃣2️⃣ Searching for Open-Source Intelligence (OSINT)
+echo "[+] Checking Publicly Available Data..."
+curl -s "https://api.hackertarget.com/reversedns/?q=$TARGET" > results/osint.txt
+
+# 1️⃣3️⃣ Checking Security Reports
+echo "[+] Checking Security Trails..."
+curl -s "https://api.securitytrails.com/v1/ip/$TARGET" -H "API_KEY: YOUR_SECURITY_TRAILS_API_KEY" > results/security_trails.json
+
+# 1️⃣4️⃣ Scan for WAF Protection
+echo "[+] Checking for Web Application Firewall (WAF)..."
+wafw00f $TARGET > results/waf_detection.txt
+
+# 1️⃣5️⃣ Full System Fingerprint (Aggressive)
+echo "[+] Running Full System Fingerprinting..."
+nmap -sV -A $TARGET > results/system_fingerprint.txt
+
+# Script Name: aaayafuj_hacking_info_of_3.sh
+# Purpose: A complete recon and scanning tool for hacking-related information gathering.
+# Usage: ./aaayafuj_hacking_info_of_3.sh <IP-ADDRESS or DOMAIN or EMAIL>
+
+# Check if an argument is provided
+if [ -z "$1" ]; then
+    echo "Usage: $0 <IP-ADDRESS or DOMAIN or EMAIL>"
+    exit 1
+fi
+
+TARGET="$1"
+echo "Starting reconnaissance on: $TARGET"
+echo "--------------------------------------------------"
+
+# 1️⃣ Basic Nmap Scan
+echo "[+] Running Basic Nmap Scan..."
+nmap -Pn "$TARGET"
+
+# 2️⃣ Aggressive Nmap Scan
+echo "[+] Running Aggressive Nmap Scan..."
+nmap -A "$TARGET"
+
+# 3️⃣ Specific Port Scan (Common Ports)
+echo "[+] Running Specific Port Scan (22, 80, 443, 445, 3389)..."
+nmap -p 22,80,443,445,3389 "$TARGET"
+
+# 4️⃣ Full Port Scan (1-65535)
+echo "[+] Running Full Port Scan (1-65535)..."
+nmap -p- "$TARGET"
+
+# 5️⃣ Vulnerability Scan
+echo "[+] Running Nmap Vulnerability Scan..."
+nmap --script vuln "$TARGET"
+
+# 6️⃣ WHOIS Lookup
+echo "[+] Performing WHOIS Lookup..."
+whois "$TARGET"
+
+# 7️⃣ DNS Enumeration
+echo "[+] Running DNS Enumeration..."
+dig ANY "$TARGET"
+host -a "$TARGET"
+nslookup "$TARGET"
+
+# 8️⃣ Reverse IP Lookup (Finding other domains on the same server)
+echo "[+] Running Reverse IP Lookup..."
+curl -s "https://api.hackertarget.com/reverseiplookup/?q=$TARGET"
+
+# 9️⃣ Traceroute & MTR (Network Route Analysis)
+echo "[+] Running Traceroute..."
+traceroute "$TARGET"
+mtr --report "$TARGET"
+
+# 🔟 GeoIP Lookup (Finding location of the target)
+echo "[+] Running GeoIP Lookup..."
+curl -s "https://ipapi.co/$TARGET/json/"
+
+# 1️⃣1️⃣ Google Dorking for OSINT (Requires Manual Check)
+echo "[+] Opening Google OSINT Search..."
+webbrowser="https://www.google.com/search?q=\"$TARGET\""
+xdg-open "$webbrowser" &>/dev/null || open "$webbrowser"
+
+# 1️⃣2️⃣ LinkedIn Lookup (Manual)
+echo "[+] Checking LinkedIn for any profiles related to the target..."
+linkedin_url="https://www.linkedin.com/search/results/people/?keywords=$TARGET"
+xdg-open "$linkedin_url" &>/dev/null || open "$linkedin_url"
+
+# 1️⃣3️⃣ Social Media Username Search (OSINT)
+echo "[+] Searching for Social Media Accounts..."
+social_media_sites=(
+    "https://www.facebook.com/search/top?q=$TARGET"
+    "https://twitter.com/search?q=$TARGET"
+    "https://www.instagram.com/$TARGET"
+    "https://github.com/$TARGET"
+    "https://www.reddit.com/user/$TARGET"
+)
+for site in "${social_media_sites[@]}"; do
+    xdg-open "$site" &>/dev/null || open "$site"
+done
+
+# 1️⃣4️⃣ Subdomain Enumeration
+echo "[+] Running Subdomain Enumeration..."
+curl -s "https://crt.sh/?q=%.$TARGET" | grep -Eo "([a-zA-Z0-9.-]+\.$TARGET)" | sort -u
+
+# 1️⃣5️⃣ Banner Grabbing (Getting service versions)
+echo "[+] Performing Banner Grabbing..."
+echo "GET / HTTP/1.1" | nc "$TARGET" 80
+curl -I "$TARGET"
+
+# 1️⃣6️⃣ Masscan (Ultra-Fast Port Scan)
+echo "[+] Running Masscan (Scanning all ports)..."
+masscan -p1-65535 --rate 10000 "$TARGET"
+
+# 1️⃣7️⃣ Shodan Search (Requires API Key)
+# echo "[+] Checking Shodan (Requires API Key)..."
+# shodan search "ip:$TARGET"
+ echo"aaayafuj is the best tool"
+ echo"aaayafuj for ethical tool"
+ echo"aaayafuj loard of tools YA"
+
+# Check if argument is provided
+if [ -z "$1" ]; then
+    echo "Usage: $0 <IP-ADDRESS or DOMAIN or EMAIL>"
+    exit 1
+fi
+
+TARGET=$1
+
+# 1️⃣ Basic Network Scan
+echo "[+] Running Basic Network Scan..."
+nmap -Pn $TARGET > results/nmap_basic.txt
+
+# 2️⃣ Aggressive Network Scan (Detailed)
+echo "[+] Running Aggressive Scan..."
+nmap -A $TARGET > results/nmap_aggressive.txt
+
+# 3️⃣ Port Scan (Common Ports)
+echo "[+] Scanning Specific Ports (22, 80, 443, 3389)..."
+nmap -p 22,80,443,3389 $TARGET > results/nmap_ports.txt
+
+# 4️⃣ Full Port Scan (All 65535 ports)
+echo "[+] Running Full Port Scan..."
+nmap -p- $TARGET > results/nmap_full_ports.txt
+
+# 5️⃣ Vulnerability Scan
+echo "[+] Running Vulnerability Scan..."
+nmap --script vuln $TARGET > results/nmap_vuln.txt
+
+# 6️⃣ WHOIS Lookup
+echo "[+] Running WHOIS Lookup..."
+whois $TARGET > results/whois.txt
+
+# 7️⃣ DNS Lookup
+echo "[+] Performing DNS Lookup..."
+dig $TARGET ANY > results/dns_info.txt
+
+# 8️⃣ Reverse DNS Lookup
+echo "[+] Performing Reverse DNS Lookup..."
+host $TARGET > results/reverse_dns.txt
+
+# 9️⃣ IP Geolocation
+echo "[+] Fetching Geolocation Data..."
+curl -s "https://ipwhois.app/json/$TARGET" | jq > results/geoip.json
+
+# 🔟 Traceroute for Network Path
+echo "[+] Running Traceroute..."
+traceroute $TARGET > results/traceroute.txt
+
+# 1️⃣1️⃣ Reverse Email Lookup (if target is an email)
+if [[ "$TARGET" == *"@"* ]]; then
+    echo "[+] Performing Reverse Email Lookup..."
+    curl -s "https://emailrep.io/$TARGET" | jq > results/email_lookup.json
+fi
+
+# 1️⃣2️⃣ Searching for Open-Source Intelligence (OSINT)
+echo "[+] Checking Publicly Available Data..."
+curl -s "https://api.hackertarget.com/reversedns/?q=$TARGET" > results/osint.txt
+
+# 1️⃣3️⃣ Checking Security Reports
+echo "[+] Checking Security Trails..."
+curl -s "https://api.securitytrails.com/v1/ip/$TARGET" -H "API_KEY: YOUR_SECURITY_TRAILS_API_KEY" > results/security_trails.json
+
+# 1️⃣4️⃣ Scan for WAF Protection
+echo "[+] Checking for Web Application Firewall (WAF)..."
+wafw00f $TARGET > results/waf_detection.txt
+
+# 1️⃣5️⃣ Full System Fingerprint (Aggressive)
+echo "[+] Running Full System Fingerprinting..."
+nmap -sV -A $TARGET > results/system_fingerprint.txt
+#!/bin/bash
+
+# Check if argument is provided
+if [ -z "$1" ]; then
+    echo "Usage: $0 <IP-ADDRESS or DOMAIN or EMAIL>"
+    exit 1
+fi
+
+TARGET=$1
+# 1️⃣ Basic Network Scan
+echo "[+] Running Basic Network Scan..."
+nmap -Pn $TARGET > results/nmap_basic.txt
+
+# 2️⃣ Aggressive Network Scan (Detailed)
+echo "[+] Running Aggressive Scan..."
+nmap -A $TARGET > results/nmap_aggressive.txt
+
+# 3️⃣ Port Scan (Common Ports)
+echo "[+] Scanning Specific Ports (22, 80, 443, 3389)..."
+nmap -p 22,80,443,3389 $TARGET > results/nmap_ports.txt
+
+# 4️⃣ Full Port Scan (All 65535 ports)
+echo "[+] Running Full Port Scan..."
+nmap -p- $TARGET > results/nmap_full_ports.txt
+
+# 5️⃣ Vulnerability Scan
+echo "[+] Running Vulnerability Scan..."
+nmap --script vuln $TARGET > results/nmap_vuln.txt
+
+# 6️⃣ WHOIS Lookup
+echo "[+] Running WHOIS Lookup..."
+whois $TARGET > results/whois.txt
+
+# 7️⃣ DNS Lookup
+echo "[+] Performing DNS Lookup..."
+dig $TARGET ANY > results/dns_info.txt
+
+# 8️⃣ Reverse DNS Lookup
+echo "[+] Performing Reverse DNS Lookup..."
+host $TARGET > results/reverse_dns.txt
+
+# 9️⃣ IP Geolocation
+echo "[+] Fetching Geolocation Data..."
+curl -s "https://ipwhois.app/json/$TARGET" | jq > results/geoip.json
+
+# 🔟 Traceroute for Network Path
+echo "[+] Running Traceroute..."
+traceroute $TARGET > results/traceroute.txt
+
+# 1️⃣1️⃣ Reverse Email Lookup (if target is an email)
+if [[ "$TARGET" == *"@"* ]]; then
+    echo "[+] Performing Reverse Email Lookup..."
+    curl -s "https://emailrep.io/$TARGET" | jq > results/email_lookup.json
+fi
+
+# 1️⃣2️⃣ Searching for Open-Source Intelligence (OSINT)
+echo "[+] Checking Publicly Available Data..."
+curl -s "https://api.hackertarget.com/reversedns/?q=$TARGET" > results/osint.txt
+
+# 1️⃣3️⃣ Checking Security Reports
+echo "[+] Checking Security Trails..."
+curl -s "https://api.securitytrails.com/v1/ip/$TARGET" -H "API_KEY: YOUR_SECURITY_TRAILS_API_KEY" > results/security_trails.json
+
+# 1️⃣4️⃣ Scan for WAF Protection
+echo "[+] Checking for Web Application Firewall (WAF)..."
+wafw00f $TARGET > results/waf_detection.txt
+
+# 1️⃣5️⃣ Full System Fingerprint (Aggressive)
+echo "[+] Running Full System Fingerprinting..."
+nmap -sV -A $TARGET > results/system_fingerprint.txt
+
+echo "==============================="
+echo "🎯 Scan Completed! Results saved in 'results/' directory"
+echo "==============================="
+
+
+
+______________________________________________________________________________________________________________________________________________________________________________________/
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+______________________________________________________________________________________________________________________________________________________________________________________\
+#!/bin/bash
+
+# Function to gather all IP info
+gather_ip_info() {
+    IP=$1
+    echo "🔍 Gathering comprehensive IP information for: $IP ..."
+    
+    # Classic IP Info commands
+    whois $IP
+    nslookup $IP
+    dig $IP
+    host $IP
+    curl ipinfo.io/$IP
+    curl ifconfig.co/$IP
+    geoiplookup $IP
+    dig -x $IP
+    host $IP
+    nslookup $IP
+    nmap -Pn $IP
+    traceroute $IP  # (Linux/macOS)
+    tracert $IP  # (Windows, may need conditional handling)
+    mtr $IP
+    tcpdump host $IP
+    whois $IP  
+    curl -s "https://ipwhois.app/json/$IP" | jq  
+    curl -s "http://ip-api.com/json/$IP" | jq  
+    dig ANY $IP  
+    dig TXT $IP  
+    host -a $IP 
+    nmap -A $IP  
+    nmap --script whois-ip $IP  
+    nmap --script ip-geolocation-* $IP  
+    whois -h whois.cymru.com " -v $IP"  
+    curl -s "https://bgp.tools/api/lookup/$IP"  
+    curl -s "https://stat.ripe.net/data/whois/data.json?resource=$IP"  
+    tracepath $IP  
+    mtr --report $IP  
+    tshark -f "host $IP"  
+    tcpdump -i eth0 host $IP 
+    torsocks curl ipinfo.io  
+    curl -x socks5h://127.0.0.1:9050 https://check.torproject.org/  
+    curl -s "https://api.hackertarget.com/aslookup/?q=$IP"  
+    curl -s "https://api.hackertarget.com/reversedns/?q=$IP"  
+    curl -s "https://ipapi.co/$IP/json/"  
+    curl -s "https://api.abuseipdb.com/api/v2/check?ipAddress=$IP"  
+    curl -s "https://otx.alienvault.com/api/v1/indicators/IPv4/$IP"  
+    curl -s "https://tools.keycdn.com/geo.json?host=$IP"  
+    curl -s "https://api.securitytrails.com/v1/ip/$IP" -H "Authorization: Bearer YOUR_API_KEY"
+    hping3 -S -p 80 $IP  
+    masscan -p1-65535 $IP --rate 10000  
+    whois $IP  
+    dig AAAA $1  # Assuming $1 is IPv6 domain
+
+    echo "✅ Finished gathering extended information for $IP."
+}
+
+# Function for Nmap Scan
+nmap_scan() {
+    echo "🔍 Running Nmap Scan for IP: $1 ..."
+    IP=$1
+    TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+    LOG_FILE="nmap_scan_results_${TIMESTAMP}.log"
+
+    # Ask for scan type
+    echo "Choose the Nmap scan to run:"
+    echo "1. Basic Scan"
+    echo "2. Aggressive Scan"
+    echo "3. Specific Port Scan"
+    echo "4. Save All Results"
+
+    read -p "Enter choice (1-4): " scan_choice
+
+    case $scan_choice in
+        1)
+            echo "Running basic scan..." | tee -a $LOG_FILE
+            nmap -sP $IP | tee -a $LOG_FILE
+            ;;
+        2)
+            echo "Running aggressive scan..." | tee -a $LOG_FILE
+            nmap -A $IP | tee -a $LOG_FILE
+            ;;
+        3)
+            echo "Running specific port scan..." | tee -a $LOG_FILE
+            nmap -p 80,443,21,22,3389 $IP | tee -a $LOG_FILE
+            ;;
+        4)
+            echo "Saving all results..." | tee -a $LOG_FILE
+            nmap -sV -O -p- --script=vuln $IP -oN nmap_results.txt -oX nmap_results.xml | tee -a $LOG_FILE
+            ;;
+        *)
+            echo "❌ Invalid choice. Please choose a valid option (1-4)."
+            ;;
+    esac
+
+    echo "✅ Nmap scan results saved to $LOG_FILE"
+}
+
+# Function for saving all results
+save_results() {
+    echo "📝 Saving all results..."
+    TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+    ALL_LOG_FILE="aaayafuj_all_results_${TIMESTAMP}.log"
+    echo "All results will be saved to $ALL_LOG_FILE"
+    echo "Results for $(date)" > $ALL_LOG_FILE
+    echo "--------------------------------------" >> $ALL_LOG_FILE
+}
+
+# Function to show the main menu
+show_menu() {
+    echo "Please choose an option:"
+    echo "1. Gather IP info"
+    echo "2. Scan Nmap"
+    echo "3. Save all results"
+    echo "4. Exit"
+}
+
+# Main program loop
+while true; do
+    show_menu
+    read -p "Enter your choice (1-4): " choice
+
+    case $choice in
+        1)
+            read -p "Enter IP address to gather info: " ip_address
+            gather_ip_info $ip_address
+            ;;
+        2)
+            read -p "Enter IP address for Nmap scan: " nmap_ip
+            nmap_scan $nmap_ip
+            ;;
+        3)
+            save_results
+            ;;
+        4)
+            echo "🔙 Exiting the program."
+            exit 0
+            ;;
+        *)
+            echo "❌ Invalid choice. Please choose a number between 1 and 4."
+            ;;
+    esac
+done
